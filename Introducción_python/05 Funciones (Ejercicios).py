@@ -152,9 +152,11 @@ Opcion
 
 """)
 
+from math import pi as PI
+
 
 def area_circulo(radio):
-    return (2 * 3,14 *radio)
+    return (2 * PI *radio)
 
 def area_cuadrado(lado):
     return lado * lado
@@ -162,19 +164,40 @@ def area_cuadrado(lado):
 def area_triangulo(base, altura):
     return base * altura / 2
 
-def calculadora_area(forma, *arg):
-
-print("""
-    Elige la forma:
-        1 = Círculo
-        2 = Resta
-        3 = Multiplicación
-        4 = División
-        """)
+def salir():
+    print("Saliendo...")
 
 
 
+def calculadora_area():
+    while True:
+        print("""
+        Elige la forma:
+            1 = Círculo
+            2 = Cuadrado
+            3 = Triángulo
+            4 = Salir
+            """)
+        forma = int(input("Opción: "))
+        match forma:
+            case 1:
+                radio = int(input("Introduce el radio: "))
+                print(f"El área del círculo con radio {radio} es {area_circulo(radio)}")
+            case 2:
+                lado = int(input("Introduce el lado: "))
+                print(f"El área del cuadrado con lado {lado} es {area_cuadrado(lado)}")
+            case 3:
+                base = int(input("Introduce el base: "))
+                altura = int(input("Introduce el altura: "))
+                print(f"El área del triángulo con base {base} y altura {altura} es {area_triangulo(base, altura)}")
+            case 4:
+                salir()
 
+                break
+            case _:
+                print("La opción no es correcta")
+    
+calculadora_area()
 
 
 # 4. Inversión de Cadena:
@@ -183,10 +206,16 @@ Crea una función que tome una cadena como entrada y devuelva la cadena invertid
 Por ejemplo, si la entrada es "python", la salida debería ser "nohtyp".
 """
 
+def str_reverse(cadena):
+    for char in cadena[::-1]:
+        print(char,end="")
+        
+def str_reverse2(cadena):
+    return cadena[::-1]
 
-
-
-
+ejemplo = "python"
+str_reverse(ejemplo)
+str_reverse2(ejemplo)
 
 
 
@@ -197,14 +226,21 @@ Desarrolla una función que cuente el número de palabras en una oración.
 Pide al usuario que ingrese una oración y muestra el resultado.
 """
 
+def ft_split(str):
+    word = 0
+    flag_inword = False
+    for char in str:
+        if char.isspace():
+            flag_inword = False
+        else:
+            if not flag_inword:
+                word += 1
+                flag_inword = True
+    return word
 
 
-
-
-
-
-
-
+ejemplo = "Aquí hay 6 palabras y         tabulaciones"
+ft_split(ejemplo)
 
 
 # 6. Fibonacci:
@@ -213,6 +249,16 @@ Implementa una función para generar los primeros n números de la
 secuencia de Fibonacci. Pide al usuario que ingrese el valor de n.
 """
 
+def ft_fibonacci(num):
+    a = 0
+    b = 1
+    i = 0
+    while i <= num:
+        print(a)
+        a, b = b, a + b          
+        i += 1
+
+ft_fibonacci(5)
 
 
 # 7. Ordenar Lista:
@@ -220,6 +266,8 @@ secuencia de Fibonacci. Pide al usuario que ingrese el valor de n.
 Escribe una función que ordene una lista de números de manera ascendente 
 o descendente según la elección del usuario.
 """
+
+
 
 
 # 8. Factorial:
