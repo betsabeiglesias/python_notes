@@ -267,7 +267,15 @@ Escribe una función que ordene una lista de números de manera ascendente
 o descendente según la elección del usuario.
 """
 
-
+def ft_sort(list):
+    for i in range(len(list)):
+        for j in range(i + 1, len(list)):
+            if list[i] > list[j]:
+                list[i], list[j] = list[j], list[i]
+    return list
+list = [5, 2, 9, 1, 5, 6]
+print("Lista desordenada:", list)
+print("Lista ordenada:", ft_sort(list))
 
 
 # 8. Factorial:
