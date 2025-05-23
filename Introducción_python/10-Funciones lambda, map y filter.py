@@ -155,16 +155,22 @@ lista_num3 = list(iterable3)
 #-----------#
 # Crear una lista con los números de 0 al 100.
 
+numeros = list(range(0,101))
+print(numeros)
+
 
 # Dividirlos entre tres con map y una función lambda.
+
+num_entre3 = list(map(lambda x: x/3, numeros))
+print(num_entre3)
 
 
 # Filtrar los que tienen parte decimal con una función lambda.
 
+decimales = list(filter(lambda x: x % 1 != 0, num_entre3))
 
-#__________#
-# Solución #
-#----------#
+decimales
+
 
 
 #___________#
@@ -179,5 +185,19 @@ edades.count(121)
 
 # Usar filter para eliminar los valores
 
+edad_check = list(filter(lambda x: x >= 0 and x < 120, edades))
+len(edad_check)
+edad_check
+edad_check.count(-3)
+edad_check.count(121)
+
+# OTRA FORMA
+edad_check = list(filter(lambda x: not (x <= 0 or x > 120), edades))
 
 # Usar map para sustituirlos por 120 o 0
+
+edad_sust = list(map(lambda x: 0 if x < 0 else (120 if x > 120 else x), edades  ))
+edad_sust
+len(edad_sust)
+edad_sust.count(-3)
+edad_sust.count(121)

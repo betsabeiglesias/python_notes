@@ -16,8 +16,6 @@ with open('datos/poema.txt', 'r', encoding="utf-8") as poema:
 print(contenido)
 
 
-
-
 # Ejercicio 2: Escribir en un fichero de texto
 # Objetivo: Crea un script que escriba un mensaje en un fichero llamado notas.txt.
 # Abre el fichero en modo escritura ("w").
@@ -76,16 +74,16 @@ with open('datos/poema.txt', 'r') as poema:
 # Pistas:
 # Usa try-except para manejar la excepción FileNotFoundError.
 
-# Ejercicio 6: Leer y escribir en un fichero CSV
-# Objetivo: Crea un script que lea un fichero CSV llamado alumnos.csv, muestre su contenido y luego añada un nuevo alumno.
-# Usa el fichero alumnos.csv con las columnas: Nombre, Edad, Email.
-# Muestra el contenido de cada fila del fichero CSV.
-# Añade un nuevo alumno al fichero: "Carlos, 24, carlos@mail.com".
-# Pistas:
-# Usa el módulo csv para manejar el fichero.
-# Usa el método .writerow() para añadir nuevas filas.
 
-# Ejercicio 7: Contar líneas y palabras en un fichero
+try:
+    with open('datos/fichero_inexistente.txt',"r") as file:
+        print(file.read())
+except Exception as e:
+    print("Error: El archivo no existe.")
+    print(f"Mensaje del sistema: {e}")
+
+
+# Ejercicio 6: Contar líneas y palabras en un fichero
 # Objetivo: Crea un script que cuente el número de líneas y el número total de palabras en un fichero llamado texto.txt.
 # Abre el fichero en modo lectura.
 # Recorre cada línea del fichero, contando el número de líneas.
@@ -95,19 +93,70 @@ with open('datos/poema.txt', 'r') as poema:
 # Usa el método .split() para dividir una línea en palabras.
 # Utiliza un contador para sumar las palabras.
 
-# Ejercicio 8: Buscar y eliminar duplicados en un fichero CSV
-# Objetivo: Crea un script que lea un fichero CSV llamado clientes.csv y elimine los registros duplicados basados en la columna Email.
-# Abre el fichero en modo lectura.
-# Almacena los registros en un diccionario usando el Email como clave para eliminar duplicados.
-# Escribe los registros únicos en un nuevo fichero CSV llamado clientes_unicos.csv.
-# Pistas:
-# Usa un diccionario para evitar duplicados.
-# Escribe los registros únicos en un nuevo CSV.
+with open('datos/poema.txt', 'r') as poema:
+    lineas = 0
+    palabras = 0
+    for linea in poema:
+        lineas += 1
+        cantidad_palabras = len(linea.split())
+        palabras += cantidad_palabras
 
-# Ejercicio 9: Leer un fichero y buscar una palabra
+    print(f"Número de lineas {lineas}")
+    print(f"Número de palabras {palabras}")
+
+
+
+# Ejercicio 7: Leer un fichero y buscar una palabra
 # Objetivo: Crea un script que lea un fichero llamado libro.txt y busque una palabra específica introducida por el usuario.
 # Solicita al usuario que introduzca la palabra a buscar.
 # Abre el fichero y recorre su contenido.
 # Muestra cuántas veces aparece la palabra en el fichero.
 # Pistas:
 # Usa el método .count() para contar las apariciones de la palabra en cada línea.
+
+def busca_cuenta_palabra():
+    palabra = input("Introduce la palabra a buscar: ")
+    with open("datos/quijote.txt") as file:
+        texto = file.read()
+        ocurrencias = texto.count(palabra)
+    print(f"{palabra} aparece {ocurrencias} veces.")
+    
+busca_cuenta_palabra()
+
+
+def busca_pablabra(fichero, palabra):
+    with open("datos/quijote.txt") as file:
+        lineas = f.readlines()
+        num_apariciones = 0
+        for indice, linea in enumerate(lineas):
+            lista_palabras = linea.split()
+            veces = lista_palabras.count(palabra)
+            print(indice, veces)
+            num_apariciones += veces
+        return num_apariciones
+
+busca_pablabra("datos/quijote.txt", "Sancho")
+
+
+# Ejercicio 8: Leer las líneas del poema y guardarlas en pickle
+# Objetivo: Crea un script que lea las líneas de un fichero y las
+# guarde en un fichero binario usando pickle
+
+import pickle
+
+def guardar_pickle(archivo_txt, archivo_pkl):
+    with open(archivo_txt, "r") as file:
+        listalineas = file.readlines()
+    with open(archivo_pkl, "wb") as f_pickle:
+        pickle.dump(listalineas, f_pickle)
+       
+guardar_pickle("datos/poema.txt", "datos/poema.pkl")
+
+with open("datos/poema.pkl", "rb") as file_binary:
+    lineas = pickle.load(file_binary)
+print(lineas)
+type(lineas)
+
+
+
+
