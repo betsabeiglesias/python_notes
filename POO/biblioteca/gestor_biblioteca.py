@@ -1,12 +1,13 @@
 
 from POO.biblioteca.items import MaterialBiblioteca, Libro, Revista, Dvd
 import pickle
-
+from biblioteca.usuario import Usuario
 
 class Gestor:
     def __init__(self, nombre):
         self.nombre = nombre
         self.materiales = []
+        self.usuarios = []
 
     def agregar_material(self, material, filename="materiales.pkl"):
         if not isinstance(material, MaterialBiblioteca):
@@ -17,6 +18,15 @@ class Gestor:
         #if any(mat.codigo_inventario == material.codigo_inventario for mat in self.materiales):
         self.materiales.append(material)
         self.guardar_materiales_pickle(filename)
+
+    def cargar_usuarios(self, usuario, filename="usuarios.pkl"):
+        if not isinstance(usuario, Usuario):
+            raise TypeError("Solo se pueden agregar objetos de tipo MaterialBiblioteca")
+        for user in self.usuarios:
+            if usuario.id == user.id:
+                raise ValueError ("Ya existe un elemento con eses código de inventario")
+            self.usuarios.append(usuario)
+            self.cargar_usuarios_pickle(filename)
 
     def __str__(self):
         return (f"La Biblioteca: {self.nombre}\nTiene {len(self.materiales)} elementos")
@@ -46,11 +56,12 @@ class Gestor:
                 return
         print ("No se encontró el código")
 
-    def prestar_elemento(self, index):
+    def prestar_elemento(self, index, usuario):
         if index < 1 or index > len(self.materiales):
             return ("El elemento seleccionado no existe")
         mat = self.materiales[index - 1]
         mat.prestado = True
+        usuario.prestamos.append(mat)
 
     def mostrar_libros(self):
         for mat in self.materiales:
@@ -104,6 +115,15 @@ class Gestor:
         except FileNotFoundError:
             print(f"No se ha encontrado archivo {filename}, se inicializa lista vacía.")
             self.materiales = []
+    
+    def cargar_usuarios_pickle(self, filename="usuarios.pkl"):
+        try:
+            with open(filename, "rb") as f:
+                self.materiales = pickle.load(f)
+        except FileNotFoundError:
+            print(f"No se ha encontrado archivo {filename}, se inicializa lista vacía.")
+            self.usuarios = []
+     
      
 
 def biblioteca_de_ejemplo():

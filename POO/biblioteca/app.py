@@ -8,8 +8,9 @@ if __name__ == "__main__":
     # biblio.cargar_materiales_pickle()
     while True:
         opt = int(input("--- BIENVENIDO A LA BIBLIOTECA ---\n"
-        "Elige tu opción:\n"
-        "1. Listar elementos\n"
+        "Elige tu opción:\n" \
+        "0. Agregar usuario\n"
+        "1. Listar elementos\n" \
         "2. Mostar elemento único\n" \
         "3. Prestar elemento\n" \
         "4. Mostrar libros\n"
@@ -21,6 +22,8 @@ if __name__ == "__main__":
         "10. Salir\n"))
     
         match opt:
+            case 0:
+                biblio.cargar_usuarios()
             case 1:
                 biblio.listar_elementos()
             case 2:
@@ -28,7 +31,8 @@ if __name__ == "__main__":
                 biblio.mostar_elemento(ind)          
             case 3:
                 ind = int(input("Introduce el número de elemento: \n"))
-                biblio.prestar_elemento(ind)
+                user = int(input("Introduce el nº de socio de la biblioteca: "))
+                biblio.prestar_elemento(ind, user)
             case 4:
                 biblio.mostrar_libros()
             case 5:
