@@ -19,7 +19,7 @@ class Gestor:
         self.materiales.append(material)
         self.guardar_materiales_pickle(filename)
 
-    def cargar_usuarios(self, usuario, name, filename="usuarios.pkl"):
+    def agregar_usuario(self, usuario, name, filename="usuarios.pkl"):
         if not isinstance(usuario, Usuario):
             raise TypeError("Solo se pueden agregar objetos de tipo MaterialBiblioteca")
         for user in self.usuarios:
@@ -27,7 +27,7 @@ class Gestor:
                 raise ValueError ("Ya existe un elemento con eses código de inventario")
             nuevo = Usuario(usuario, name)
             self.usuarios.append(nuevo)
-            self.cargar_usuarios_pickle(filename)
+            self.guardar_usuarios_pickle(filename)
 
     def __str__(self):
         return (f"La Biblioteca: {self.nombre}\nTiene {len(self.materiales)} elementos")
@@ -117,7 +117,7 @@ class Gestor:
             print(f"No se ha encontrado archivo {filename}, se inicializa lista vacía.")
             self.materiales = []
     
-    def cargar_usuarios_pickle(self, filename="usuarios.pkl"):
+    def guardar_usuarios_pickle(self, filename="usuarios.pkl"):
         try:
             with open(filename, "rb") as f:
                 self.materiales = pickle.load(f)
