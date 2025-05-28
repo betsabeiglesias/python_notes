@@ -1,5 +1,5 @@
 class Usuario():
-    def __init__(self, nombre, id):
+    def __init__(self, id, nombre):
         self.nombre = nombre
         self.id = id
         self.prestamos = []

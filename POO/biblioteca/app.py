@@ -1,7 +1,6 @@
 from POO.biblioteca.gestor_biblioteca import Gestor, biblioteca_de_ejemplo
 
 
-
 if __name__ == "__main__":
     # biblio = Biblioteca("Central")
     biblio = biblioteca_de_ejemplo()
@@ -23,7 +22,9 @@ if __name__ == "__main__":
     
         match opt:
             case 0:
-                biblio.cargar_usuarios()
+                user = int(input("Introduce el número de socio: \n"))
+                name = input("Introduce el nombre de socio: \n")
+                biblio.cargar_usuarios(user, name)
             case 1:
                 biblio.listar_elementos()
             case 2:
