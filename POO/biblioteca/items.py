@@ -6,10 +6,26 @@ class MaterialBiblioteca (ABC):
         self.titulo = titulo
         self.autor = autor
         self.codigo_inventario = codigo_inventario
+        self.prestado = False
 
     @abstractmethod
     def mostrar_info(self):
         print(f"Título: {self.titulo} - Autor: {self.autor} - Código: {self.codigo_inventario}")
+
+    def prestar(self):
+        print(f"Se ha prestado el título {self.titulo} ({self.__class__.__name__})")
+        self.prestado = True
+
+    def devolver(self):
+        print(f"Se ha devuelto el título {self.titulo} ({self.__class__.__name__})")
+        self.prestado = False
+
+    def mostrar_info(self):
+        print(f"--- Información del {self.__class__.__name__} ---")
+        print(f"Título: {self.titulo}")
+        print(f"Autor: {self.autor}")
+        print(f"Código de inventario: {self.codigo_inventario}")
+        print(f"Prestado: {self.prestado}")
 
 
 
@@ -29,11 +45,9 @@ class Libro(MaterialBiblioteca):
         else: self.__num_paginas = valor
     
     def mostrar_info(self):
-        print(f"--- Información del {self.__class__.__name__} ---")
-        print(f"Título: {self.titulo}")
-        print(f"Autor: {self.autor}")
-        print(f"Código de inventario: {self.codigo_inventario}")
+        super().mostrar_info()
         print(f"Número de páginas: {self.num_paginas}")
+    
 
 
 
@@ -71,19 +85,16 @@ class Revista(MaterialBiblioteca):
         self.__fecha_publicacion = fecha
 
     def mostrar_info(self):
-        print(f"--- Información de la {self.__class__.__name__} ---")
-        print(f"Título: {self.titulo}")
-        print(f"Autor: {self.autor}")
-        print(f"Código de inventario: {self.codigo_inventario}")
+        super().mostrar_info()
         print(f"Número de edición: {self.num_edicion}")
         print(f"Fecha de publicación: {self.fecha_publicacion.strftime('%d/%m/%Y')}")
 
 
 class Dvd(MaterialBiblioteca):
-    def __init__(self, titulo, autor, codigo_inventario):
+    def __init__(self, titulo, autor, codigo_inventario, duracion, formato):
         super().__init__(titulo, autor, codigo_inventario)
-        self.duracion = None
-        self.formato = None
+        self.duracion = duracion
+        self.formato = formato
     
     @property
     def duracion(self):
@@ -106,10 +117,7 @@ class Dvd(MaterialBiblioteca):
         self.__formato = valor.strip()
 
     def mostrar_info(self):
-        print(f"--- Información del {self.__class__.__name__} ---")
-        print(f"Título: {self.titulo}")
-        print(f"Autor: {self.autor}")
-        print(f"Código de inventario: {self.codigo_inventario}")
+        super().mostrar_info()
         print(f"Duración: {self.duracion} minutos")
         print(f"Formato: {self.formato}")
 
@@ -117,9 +125,18 @@ class Dvd(MaterialBiblioteca):
 
 
 
-libro = Libro("titulo","autor", "codigo", 10)
+libro = Libro("El Hobbit", "J.R.R. Tolkien", "L001", 310)
 libro.mostrar_info()
+libro.prestar()
+libro.devolver()
 
-
-revista = Revista("revista", "varios", "codigorevista", "1", "26/05/2025")
+revista = Revista("National Geographic", "Varios", "R100", 5, "15/03/2024")
 revista.mostrar_info()
+revista.prestar()
+revista.devolver()
+
+dvd = Dvd("Interstellar", "Christopher Nolan", "D777", 169, "Blu-ray")
+dvd.mostrar_info()
+dvd.prestar()
+dvd.devolver()
+          
