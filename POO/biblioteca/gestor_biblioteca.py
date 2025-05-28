@@ -19,13 +19,14 @@ class Gestor:
         self.materiales.append(material)
         self.guardar_materiales_pickle(filename)
 
-    def cargar_usuarios(self, usuario, filename="usuarios.pkl"):
+    def cargar_usuarios(self, usuario, name, filename="usuarios.pkl"):
         if not isinstance(usuario, Usuario):
             raise TypeError("Solo se pueden agregar objetos de tipo MaterialBiblioteca")
         for user in self.usuarios:
             if usuario.id == user.id:
                 raise ValueError ("Ya existe un elemento con eses código de inventario")
-            self.usuarios.append(usuario)
+            nuevo = Usuario(usuario, name)
+            self.usuarios.append(nuevo)
             self.cargar_usuarios_pickle(filename)
 
     def __str__(self):
