@@ -121,22 +121,24 @@ class Dvd(MaterialBiblioteca):
         print(f"Duración: {self.duracion} minutos")
         print(f"Formato: {self.formato}")
 
+   
 
 
 
 
-libro = Libro("El Hobbit", "J.R.R. Tolkien", "L001", 310)
-libro.mostrar_info()
-libro.prestar()
-libro.devolver()
 
-revista = Revista("National Geographic", "Varios", "R100", 5, "15/03/2024")
-revista.mostrar_info()
-revista.prestar()
-revista.devolver()
+# libro = Libro("El Hobbit", "J.R.R. Tolkien", "L001", 310)
+# libro.mostrar_info()
+# libro.prestar()
+# libro.devolver()
 
-dvd = Dvd("Interstellar", "Christopher Nolan", "D777", 169, "Blu-ray")
-dvd.mostrar_info()
-dvd.prestar()
-dvd.devolver()
+# revista = Revista("National Geographic", "Varios", "R100", 5, "15/03/2024")
+# revista.mostrar_info()
+# revista.prestar()
+# revista.devolver()
+
+# dvd = Dvd("Interstellar", "Christopher Nolan", "D777", 169, "Blu-ray")
+# dvd.mostrar_info()
+# dvd.prestar()
+# dvd.devolver()
           

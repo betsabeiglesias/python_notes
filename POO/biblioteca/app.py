@@ -1,10 +1,11 @@
-from POO.biblioteca.gestor_biblioteca import Gestor, biblioteca_de_ejemplo
+from classes.gestor_biblioteca import Gestor,biblioteca_de_ejemplo
 
 
 if __name__ == "__main__":
-    # biblio = Biblioteca("Central")
+    # biblio = Gestor("Central")
     biblio = biblioteca_de_ejemplo()
     # biblio.cargar_materiales_pickle()
+    # biblio.cargar_usuarios_pickle()
     while True:
         opt = int(input("--- BIENVENIDO A LA BIBLIOTECA ---\n"
         "Elige tu opción:\n" \
@@ -17,14 +18,14 @@ if __name__ == "__main__":
         "6. Mostrar DVD's\n" \
         "7. Pedir y agregar material\n" \
         "8. Mostrar elemento cón código\n" \
-        "9. Borrar elemento cón código\n"
-        "10. Salir\n"))
+        "9. Borrar elemento cón código\n" \
+        "10.Mostrar usuario\n"
+        "11.Salir\n"))
     
         match opt:
             case 0:
-                user = int(input("Introduce el número de socio: \n"))
                 name = input("Introduce el nombre de socio: \n")
-                biblio.cargar_usuarios(user, name)
+                biblio.agregar_usuario(name)
             case 1:
                 biblio.listar_elementos()
             case 2:
@@ -49,6 +50,12 @@ if __name__ == "__main__":
                 cod = input("Introduce código elemento; \n")
                 biblio.borrar_elemento_codigo(cod)
             case 10:
+                if not biblio.usuarios:
+                    print("No hay usuarios registrados.")
+                else:
+                    for usuario in biblio.usuarios:
+                        usuario.mostrar_info()
+            case 11:
                 print("Hasta la próxima")
                 break
             case _:

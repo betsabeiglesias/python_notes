@@ -1,7 +1,7 @@
 
-from POO.biblioteca.items import MaterialBiblioteca, Libro, Revista, Dvd
+from classes.items import MaterialBiblioteca, Libro, Revista, Dvd
 import pickle
-from biblioteca.usuario import Usuario
+from classes.usuario import Usuario
 
 class Gestor:
     def __init__(self, nombre):
@@ -19,15 +19,13 @@ class Gestor:
         self.materiales.append(material)
         self.guardar_materiales_pickle(filename)
 
-    def agregar_usuario(self, usuario, name, filename="usuarios.pkl"):
-        if not isinstance(usuario, Usuario):
-            raise TypeError("Solo se pueden agregar objetos de tipo MaterialBiblioteca")
+    def agregar_usuario(self, name, filename="usuarios.pkl"):
+        nuevo = Usuario(name)
         for user in self.usuarios:
-            if usuario.id == user.id:
-                raise ValueError ("Ya existe un elemento con eses código de inventario")
-            nuevo = Usuario(usuario, name)
-            self.usuarios.append(nuevo)
-            self.guardar_usuarios_pickle(filename)
+            if nuevo.id_usuario == user.id_usuario:
+                raise ValueError ("Ya existe un elemento con ese id usuario")
+        self.usuarios.append(nuevo)
+        self.guardar_usuarios_pickle(filename)
 
     def __str__(self):
         return (f"La Biblioteca: {self.nombre}\nTiene {len(self.materiales)} elementos")
@@ -105,11 +103,11 @@ class Gestor:
         self.agregar_material(nuevo)
         print(f"Material '{titulo}' agregado correctamente.")
 
-    def guardar_materiales_pickle(self, filename="materiales.pkl"):
+    def guardar_materiales_pickle(self, filename="../../materiales.pkl"):
         with open(filename, "wb") as f:
             pickle.dump(self.materiales, f)
 
-    def cargar_materiales_pickle(self, filename="materiales.pkl"):
+    def cargar_materiales_pickle(self, filename="../../materiales.pkl"):
         try:
             with open(filename, "rb") as f:
                 self.materiales = pickle.load(f)
@@ -118,9 +116,16 @@ class Gestor:
             self.materiales = []
     
     def guardar_usuarios_pickle(self, filename="usuarios.pkl"):
+        with open(filename, "wb") as f:
+                pickle.dump(self.usuarios, f)
+        # except FileNotFoundError:
+        #     print(f"No se ha encontrado archivo {filename}, se inicializa lista vacía.")
+        #     self.usuarios = []
+
+    def cargar_usuarios_pickle(self, filename="usuarios.pkl"):
         try:
             with open(filename, "rb") as f:
-                self.materiales = pickle.load(f)
+                self.usuarios = pickle.load(f)
         except FileNotFoundError:
             print(f"No se ha encontrado archivo {filename}, se inicializa lista vacía.")
             self.usuarios = []
@@ -147,6 +152,9 @@ def biblioteca_de_ejemplo():
     biblio.agregar_material(Dvd("Inception", "Christopher Nolan", "D778", 148, "Blu-ray"))
     biblio.agregar_material(Dvd("El Padrino", "Francis Ford Coppola", "D779", 175, "DVD"))
     biblio.agregar_material(Dvd("Pulp Fiction", "Quentin Tarantino", "D780", 154, "DVD"))
+
+    biblio.cargar_usuarios_pickle()
+
 
     return biblio
 
