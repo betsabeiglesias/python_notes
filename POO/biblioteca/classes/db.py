@@ -175,7 +175,8 @@ class Gestor_BBDD:
             id_item INT NOT NULL,
             id_user INT NOT NULL,
             fecha_prestamo DATETIME NOT NULL,
-            fecha_devolucion DATETIME NOT NULL,
+            fecha_limite DATETIME NOT NULL,
+            fecha_devolucion DATETIME,
             PRIMARY KEY (id_item, id_user, fecha_prestamo),
             FOREIGN KEY (id_item) REFERENCES catalogo_biblioteca(id_material) ON DELETE CASCADE,
             FOREIGN KEY (id_user) REFERENCES usuarios_biblioteca(id_usuario) ON DELETE CASCADE 
@@ -201,10 +202,10 @@ class Gestor_BBDD:
             self.cursor.execute("UPDATE catalogo_biblioteca SET prestado = TRUE WHERE id_material = %s", (id_item,))
             self.conexion.commit()
            
-            query_insert_ptmo = "INSERT INTO prestamos (id_item, id_user, fecha_prestamo, fecha_devolucion) VALUES (%s, %s, %s, %s)"
+            query_insert_ptmo = "INSERT INTO prestamos (id_item, id_user, fecha_prestamo, fecha_limite, fecha_devolucion) VALUES (%s, %s, %s, %s)"
             fecha_prestamo = datetime.now()
-            fecha_devolucion = fecha_prestamo + timedelta(days=14)
-            self.ejecucion_query(query_insert_ptmo, (id_item, id_user, fecha_prestamo, fecha_devolucion))
+            fecha_limite = fecha_prestamo + timedelta(days=14)
+            self.ejecucion_query(query_insert_ptmo, (id_item, id_user, fecha_prestamo, fecha_limite, None))
         
         except mysql.connector.Error as e:
             print(f"❌ Error al prestar elemento: {e}")
