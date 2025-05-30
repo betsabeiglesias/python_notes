@@ -117,19 +117,16 @@ class Gestor_BBDD:
             id_material = self.cursor.lastrowid
 
             if tipo == "libro":
-                query_insert_libro = """INSERT INTO libros (id_material, num_paginas)
-                    VALUES (%s, %s)"""
+                query_insert_libro = """INSERT INTO libros (id_material, num_paginas) VALUES (%s, %s)"""
                 self.cursor.execute(query_insert_libro, (id_material, item.num_paginas))
             
             elif tipo == "revista":
-                query_insert_revista = """ INSERT INTO revistas (id_material, num_edicion, fecha_publicacion)
-                    VALUES (%s, %s, %s)"""
+                query_insert_revista = """ INSERT INTO revistas (id_material, num_edicion, fecha_publicacion) VALUES (%s, %s, %s)"""
                 fecha_str = item.fecha_publicacion.strftime('%Y-%m-%d')
                 self.cursor.execute(query_insert_revista, (id_material, item.num_edicion, fecha_str))
 
             elif tipo == "dvd":
-                query_insert_dvd = """INSERT INTO dvds (id_material, duracion, formato)
-                    VALUES (%s, %s, %s)"""
+                query_insert_dvd = """INSERT INTO dvds (id_material, duracion, formato) VALUES (%s, %s, %s)"""
                 self.cursor.execute(query_insert_dvd, (id_material, item.duracion, item.formato))
 
             self.conexion.commit()
@@ -212,7 +209,10 @@ class Gestor_BBDD:
         except mysql.connector.Error as e:
             print(f"❌ Error al prestar elemento: {e}")
         
+
     def borrar_tabla(self, tabla):
         query_borrar = f"DROP TABLE IF EXISTS {tabla}"
         self.ejecucion_query(query_borrar)
+
+    
 

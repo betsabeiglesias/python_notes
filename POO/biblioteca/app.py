@@ -10,7 +10,7 @@ if __name__ == "__main__":
     db = Gestor_BBDD()
   
     db.conectar_db()
-    db.borrar_tabla("prestamos")
+    #db.borrar_tabla("prestamos")
     db.crear_tablas()
     # biblio.db.conectar_db()
     # biblio.cargar_materiales_pickle()
