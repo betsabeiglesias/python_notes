@@ -75,19 +75,7 @@ class Gestor:
         mat.prestado = True
         usuario.prestamos.append(mat)
 
-  
-        
-        query_item = "SELECT * FROM catalogo_biblioteca" \
-        "WHERE id_item == %s"
-        ejecucion_query(query_item)
-
-
-        query_user = "SELECT * FROM usuarios" \
-        "WHERE id_item == %s"
-        
-
-
-
+       
     def mostrar_libros(self):
         for mat in self.materiales:
             if isinstance(mat, Libro):
