@@ -2,12 +2,21 @@
 from classes.items import MaterialBiblioteca, Libro, Revista, Dvd
 import pickle
 from classes.usuario import Usuario
+from classes.db import Gestor_BBDD
 
 class Gestor:
     def __init__(self, nombre):
         self.nombre = nombre
         self.materiales = []
         self.usuarios = []
+        self.db = Gestor_BBDD()
+
+    # def conectar_base(self):
+    #     self.db.conectar_db()
+
+    # def desconectar_base(self):
+    #     self.db.
+
 
     def agregar_material(self, material, filename="materiales.pkl"):
         if not isinstance(material, MaterialBiblioteca):
@@ -18,14 +27,17 @@ class Gestor:
         #if any(mat.codigo_inventario == material.codigo_inventario for mat in self.materiales):
         self.materiales.append(material)
         self.guardar_materiales_pickle(filename)
+        return material
 
     def agregar_usuario(self, name, filename="usuarios.pkl"):
         nuevo = Usuario(name)
         for user in self.usuarios:
             if nuevo.id_usuario == user.id_usuario:
                 raise ValueError ("Ya existe un elemento con ese id usuario")
-        self.usuarios.append(nuevo)
-        self.guardar_usuarios_pickle(filename)
+        # self.usuarios.append(nuevo)
+        # self.guardar_usuarios_pickle(filename)
+        return nuevo
+        
 
     def __str__(self):
         return (f"La Biblioteca: {self.nombre}\nTiene {len(self.materiales)} elementos")
@@ -55,12 +67,26 @@ class Gestor:
                 return
         print ("No se encontró el código")
 
+    # ESTE PRESTA ELEMENTOS ES PARA PICKLE 
     def prestar_elemento(self, index, usuario):
         if index < 1 or index > len(self.materiales):
             return ("El elemento seleccionado no existe")
         mat = self.materiales[index - 1]
         mat.prestado = True
         usuario.prestamos.append(mat)
+
+  
+        
+        query_item = "SELECT * FROM catalogo_biblioteca" \
+        "WHERE id_item == %s"
+        ejecucion_query(query_item)
+
+
+        query_user = "SELECT * FROM usuarios" \
+        "WHERE id_item == %s"
+        
+
+
 
     def mostrar_libros(self):
         for mat in self.materiales:
@@ -85,7 +111,6 @@ class Gestor:
         tipo = input("¿Qué tipo de material quieres agregar? (libro/revista/dvd): ").strip().lower()
         titulo = input("Título: ")
         autor = input("Autor: ")
-        codigo = input("Código de inventario: ")
         if tipo == "libro":
             paginas = int(input("Número de páginas: "))
             nuevo = Libro(titulo, autor, codigo, paginas)
@@ -100,9 +125,11 @@ class Gestor:
         else:
             print("Tipo no válido. Cancela operación.")
             return
-        self.agregar_material(nuevo)
-        print(f"Material '{titulo}' agregado correctamente.")
+        # self.agregar_material(nuevo)
+        # print(f"Material '{titulo}' agregado correctamente.")
+        return nuevo
 
+        
     def guardar_materiales_pickle(self, filename="../../materiales.pkl"):
         with open(filename, "wb") as f:
             pickle.dump(self.materiales, f)
@@ -131,32 +158,6 @@ class Gestor:
             self.usuarios = []
      
      
-
-def biblioteca_de_ejemplo():
-    biblio = Gestor("Central")
-
-    # Libros
-    biblio.agregar_material(Libro("El Hobbit", "J.R.R. Tolkien", "L001", 310))
-    biblio.agregar_material(Libro("Cien Años de Soledad", "Gabriel García Márquez", "L002", 417))
-    biblio.agregar_material(Libro("1984", "George Orwell", "L003", 328))
-    biblio.agregar_material(Libro("Fahrenheit 451", "Ray Bradbury", "L004", 249))
-    biblio.agregar_material(Libro("Orgullo y Prejuicio", "Jane Austen", "L005", 279))
-
-    # Revistas
-    biblio.agregar_material(Revista("National Geographic", "Varios", "R100", 5, "15/03/2024"))
-    biblio.agregar_material(Revista("Scientific American", "Varios", "R101", 10, "01/02/2023"))
-    biblio.agregar_material(Revista("Muy Interesante", "Varios", "R102", 45, "10/07/2022"))
-
-    # DVDs
-    biblio.agregar_material(Dvd("Interstellar", "Christopher Nolan", "D777", 169, "Blu-ray"))
-    biblio.agregar_material(Dvd("Inception", "Christopher Nolan", "D778", 148, "Blu-ray"))
-    biblio.agregar_material(Dvd("El Padrino", "Francis Ford Coppola", "D779", 175, "DVD"))
-    biblio.agregar_material(Dvd("Pulp Fiction", "Quentin Tarantino", "D780", 154, "DVD"))
-
-    biblio.cargar_usuarios_pickle()
-
-
-    return biblio
 
 
 # if __name__ == "__main__":

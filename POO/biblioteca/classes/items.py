@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 import datetime
+import uuid
 
 class MaterialBiblioteca (ABC):
     def __init__(self, titulo, autor, codigo_inventario):
         self.titulo = titulo
         self.autor = autor
-        self.codigo_inventario = codigo_inventario
+        self.codigo_inventario = uuid.uuid4().hex[:6].upper()
         self.prestado = False
 
     @abstractmethod
@@ -28,10 +29,10 @@ class MaterialBiblioteca (ABC):
         print(f"Prestado: {self.prestado}")
 
 
-
 class Libro(MaterialBiblioteca):
     def __init__(self, titulo, autor, codigo_inventario, num_paginas):
         super().__init__(titulo, autor, codigo_inventario)
+        self.tipo = "libro"
         self.num_paginas = num_paginas #esto usa el setter
 
     @property
@@ -54,6 +55,7 @@ class Libro(MaterialBiblioteca):
 class Revista(MaterialBiblioteca):
     def __init__(self, titulo, autor, codigo_inventario, num_edicion, fecha_publicacion):
         super().__init__(titulo, autor, codigo_inventario)
+        self.tipo = "revista"
         self.num_edicion = 0
         self.fecha_publicacion = fecha_publicacion
 
@@ -93,6 +95,7 @@ class Revista(MaterialBiblioteca):
 class Dvd(MaterialBiblioteca):
     def __init__(self, titulo, autor, codigo_inventario, duracion, formato):
         super().__init__(titulo, autor, codigo_inventario)
+        self.tipo = "dvd"
         self.duracion = duracion
         self.formato = formato
     
