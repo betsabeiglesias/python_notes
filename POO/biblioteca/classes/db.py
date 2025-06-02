@@ -153,8 +153,8 @@ class Gestor_BBDD:
             self.cursor.execute(query)
             results = self.cursor.fetchall()
             df = pd.DataFrame(results, columns=[col[0] for col in self.cursor.description])
-            # print (df)
-            return print (df)
+            print (df)
+            return (df)
         except mysql.connector.Error as e:
             print(f"❌ Error de MySQL: {e}")
             return []

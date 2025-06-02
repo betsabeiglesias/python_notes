@@ -77,8 +77,9 @@ if __name__ == "__main__":
                 biblio.borrar_elemento_codigo(cod)
             case 10:
                 usuarios = db.select_query("SELECT * FROM usuarios_biblioteca")
-                for us in usuarios:
-                    print (us)
+                # for us in usuarios:
+                #     print (us) si no devolviesemos un db de panda, tendríamos que iterar sobre las tuplas que nos
+                                #devuelve la consulta de fetchall.
                 # if not biblio.usuarios:
                 #     print("No hay usuarios registrados.")
                 # else:
