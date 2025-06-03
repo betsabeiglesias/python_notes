@@ -10,7 +10,7 @@ if __name__ == "__main__":
     db = Gestor_BBDD()
   
     db.conectar_db()
-    db.abrir_sesion()
+   
     db.crear_tablas()
     
     while True:
@@ -48,7 +48,8 @@ if __name__ == "__main__":
                 user = int(input("Introduce el nº de socio de la biblioteca: "))
                 db.devolver_elemento_bbdd(ind,user)    
             case 4:
-                db.mostrar_catalogo()
+                with db.Session() as session:
+                    db.mostrar_catalogo(session)
             case 5:
                 db.mostrar_usuarios()
             case 6:

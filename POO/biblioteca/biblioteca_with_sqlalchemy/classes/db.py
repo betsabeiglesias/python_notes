@@ -28,10 +28,11 @@ class Gestor_BBDD:
         try:
             with self.engine.connect() as connection:
                 print("Conexión exitosa")
-        except mysql.connector.Error as e:
+        except Exception as e:
             print(f"❌ Error de MySQL: {e}")
 
     def abrir_sesion(self):
+
         self.session = self.Session()
         print("✅ Sesión Abierta")
 
@@ -185,8 +186,8 @@ class Gestor_BBDD:
             print(f"❌ Error al prestar elemento: {e}")
         
 
-    def mostrar_catalogo(self):
-        materiales = self.session.query(CatalogoBiblioteca).all()
+    def mostrar_catalogo_df(self, session):
+        materiales = session.query(CatalogoBiblioteca).all()
         data = [
         {
             "id_material": m.id_material,
@@ -201,8 +202,9 @@ class Gestor_BBDD:
         df = pd.DataFrame(data)
         print(df)
 
-    def mostrar_catalogo(self):
-        materiales = self.session.query(CatalogoBiblioteca).all()
+
+    def mostrar_catalogo(self, session):
+        materiales = session.query(CatalogoBiblioteca).all()
         data = [
         {
             "id_material": m.id_material,
@@ -214,9 +216,7 @@ class Gestor_BBDD:
         }
         for m in materiales
         ]
-        df = pd.DataFrame(data)
-        print(df)
-
+        return {"materiales": data}
 
     def mostrar_usuarios(self):
         users = self.session.query(Usuarios_Alchemy).all()
