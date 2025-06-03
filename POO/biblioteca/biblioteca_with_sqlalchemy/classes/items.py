@@ -11,19 +11,19 @@ class MaterialBiblioteca (ABC):
 
     @abstractmethod
     def mostrar_info(self):
-        print(f"Título: {self.titulo} - Autor: {self.autor} - Código: {self.codigo_inventario}")
+        print(f"titulo: {self.titulo} - Autor: {self.autor} - Código: {self.codigo_inventario}")
 
     def prestar(self):
-        print(f"Se ha prestado el título {self.titulo} ({self.__class__.__name__})")
+        print(f"Se ha prestado el titulo {self.titulo} ({self.__class__.__name__})")
         self.prestado = True
 
     def devolver(self):
-        print(f"Se ha devuelto el título {self.titulo} ({self.__class__.__name__})")
+        print(f"Se ha devuelto el titulo {self.titulo} ({self.__class__.__name__})")
         self.prestado = False
 
     def mostrar_info(self):
         print(f"--- Información del {self.__class__.__name__} ---")
-        print(f"Título: {self.titulo}")
+        print(f"titulo: {self.titulo}")
         print(f"Autor: {self.autor}")
         print(f"Código de inventario: {self.codigo_inventario}")
         print(f"Prestado: {self.prestado}")

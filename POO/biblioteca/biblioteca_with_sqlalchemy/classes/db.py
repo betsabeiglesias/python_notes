@@ -20,7 +20,9 @@ class Gestor_BBDD:
         self.cursor = None
         self.URL = "mysql+pymysql://root:IupkeoIwuJVczCxRpsSxBIPgaGqnLpES@nozomi.proxy.rlwy.net:50794/railway"
         self.engine = create_engine(self.URL) # ALCHEMY
-        self.Session = sessionmaker(bind=self.engine)
+        
+        #esto es necesario para frontend de terminal:
+        # self.Session = sessionmaker(bind=self.engine)
 
 
     # ALCHEMY
@@ -50,67 +52,56 @@ class Gestor_BBDD:
         except Exception as e:
             print(f"❌ Error al crear las tablas: {e}")
 
-    def pedir_material_usuario(self):
-        tipo = input("¿Qué tipo de material quieres agregar? (libro, revista, dvd): ").lower()
-        
-        titulo = input("Título: ")
-        autor = input("Autor: ")
+
+##### USUARIOS #####
+
+    def agregar_material_catalogo(self, session, tipo, titulo, autor, extra_data): 
+    # Aquí, extra_data es un diccionario (o mejor aún, un objeto Pydantic) que contiene los datos adicionales según el tipo.
         codigo_inventario = uuid.uuid4().hex[:6].upper()
         prestado = False
-
         if tipo == 'libro':
-            num_paginas = int(input("Número de páginas: "))
             item = Libro(
                 catalogo=CatalogoBiblioteca(
                     tipo='Libro', titulo=titulo, autor=autor,
                     codigo_inventario=codigo_inventario, prestado=prestado
                 ),
-                num_paginas=num_paginas
+                num_paginas=extra_data["paginas"]
             )
-
         elif tipo == 'revista':
-            num_edicion = int(input("Número de edición: "))
-            fecha_str = input("Fecha de publicación (YYYY-MM-DD): ")
-            from datetime import datetime
-            fecha_publicacion = datetime.strptime(fecha_str, '%Y-%m-%d').date()
             item = Revista(
                 catalogo=CatalogoBiblioteca(
                     tipo='Revista', titulo=titulo, autor=autor,
                     codigo_inventario=codigo_inventario, prestado=prestado
                 ),
-                num_edicion=num_edicion,
-                fecha_publicacion=fecha_publicacion
+                num_edicion=extra_data["edicion"],
+                fecha_publicacion=extra_data["fecha"]
             )
-
-        elif tipo == 'dvd':
-            duracion = float(input("Duración (horas): "))
-            formato = input("Formato: ")
+        elif tipo == 'dvd':   
             item = DVD(
                 catalogo=CatalogoBiblioteca(
                     tipo='Dvd', titulo=titulo, autor=autor,
                     codigo_inventario=codigo_inventario, prestado=prestado
                 ),
-                duracion=duracion,
-                formato=formato
+                duracion=extra_data["duracion"],
+                formato=extra_data["formato"]
             )
         else:
-            print("❌ Tipo desconocido.")
-            return None
+            raise ValueError("Tipo de material no válido")
 
         return item
 
 
-    def insertar_material_bbdd(self, item):
+    def insertar_material_bbdd(self, session, item):
         try:
             # Paso 1: agregar el registro general del catálogo
-            self.session.add(item.catalogo)
-            self.session.commit()
-            self.session.refresh(item.catalogo)  # asegura que id_material esté disponible
+            session.add(item.catalogo)
+            session.commit()
+            session.refresh(item.catalogo)  # asegura que id_material esté disponible
 
             # Paso 2: conectar el id_material al objeto específico
             item.id_material = item.catalogo.id_material
-            self.session.add(item)
-            self.session.commit()
+            session.add(item)
+            session.commit()
 
             print(f"✅ Material '{item.catalogo.titulo}' agregado correctamente a la base de datos.")
 
@@ -119,14 +110,7 @@ class Gestor_BBDD:
             print(f"❌ Error al insertar material: {e}")
 
 
-    def insertar_usuario(self):
-        try:
-            name = input("Introduce el nombre de socio: \n")
-            nuevo = Usuarios_Alchemy(nombre=name)
-            self.session.add(nuevo)
-            self.session.commit()
-        except Exception as e:
-            print(f"❌ Error al insertar usuario: {e}")
+    
 
     def prestar_elemento_bbdd(self, id_item, id_user):
         try:
@@ -217,16 +201,45 @@ class Gestor_BBDD:
         for m in materiales
         ]
         return {"materiales": data}
+    
+    def mostrar_material_unico(self, session, id_item):
+        item = session.query(CatalogoBiblioteca).filter(CatalogoBiblioteca.id_material == id_item).first()
+        if not item:
+            return None
+        return {
+            "id_material": item.id_material,
+            "tipo": item.tipo,
+            "titulo": item.titulo,
+            "autor": item.autor,
+            "código_inventario": item.codigo_inventario,
+            "prestado": item.prestado
+        }
 
-    def mostrar_usuarios(self):
-        users = self.session.query(Usuarios_Alchemy).all()
+
+##### USUARIOS #####
+
+    def mostrar_usuarios(self, session):
+        users = session.query(Usuarios_Alchemy).all()
         data =[{
             "id_usuario": u.id,
             "nombre": u.nombre,
         }
         for u in users]
-        df = pd.DataFrame(data)
-        print(df)
+        return {"usuarios": data}
+    
+    def crear_usuario(self, nombre):
+        nuevo = Usuarios_Alchemy(nombre)
+        return{ "nombre": nuevo.nombre}
+    
+    def insertar_usuario(self, session, new_user):
+        try:
+            # nuevo = Usuarios_Alchemy(user)
+            session.add(new_user)
+            session.commit()
+        except Exception as e:
+            print(f"❌ Error al insertar usuario: {e}")
+
+
 
     def mostrar_unico_usuarios(self, id_user):
         user = self.session.query(Usuarios_Alchemy).filter(Usuarios_Alchemy.id == id_user).first()
@@ -249,4 +262,4 @@ class Gestor_BBDD:
         df = pd.DataFrame(data)
         print(df)
 
-     
+    

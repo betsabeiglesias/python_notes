@@ -11,34 +11,13 @@ class Gestor:
         self.usuarios = []
         self.db = Gestor_BBDD()
 
-    # def conectar_base(self):
-    #     self.db.conectar_db()
 
-    # def desconectar_base(self):
-    #     self.db.
-
-
-    def agregar_material(self, material, filename="materiales.pkl"):
-        if not isinstance(material, MaterialBiblioteca):
-            raise TypeError("Solo se pueden agregar objetos de tipo MaterialBiblioteca")
-        for mat in self.materiales:
-            if mat.codigo_inventario == material.codigo_inventario:
-                raise ValueError ("Ya existe un elemento con eses código de inventario")
-        #if any(mat.codigo_inventario == material.codigo_inventario for mat in self.materiales):
-        self.materiales.append(material)
-        self.guardar_materiales_pickle(filename)
-        return material
-
-
-        
+    
 
     def __str__(self):
         return (f"La Biblioteca: {self.nombre}\nTiene {len(self.materiales)} elementos")
     
-    def listar_elementos(self):
-        for i, mat in enumerate(self.materiales, start = 1):
-            print (f"{i}: ") 
-            mat.mostrar_info()
+
 
     def mostar_elemento(self, index):
         if index < 1 or index > len(self.materiales):
@@ -82,10 +61,7 @@ class Gestor:
             if isinstance(mat, Dvd):
                 print(f"- {mat.titulo} (Código {mat.codigo_inventario})")
 
-    def pedir_y_agregar_material(self):
-        tipo = input("¿Qué tipo de material quieres agregar? (libro/revista/dvd): ").strip().lower()
-        titulo = input("Título: ")
-        autor = input("Autor: ")
+    def agregar_material_catalogo(self, session, tipo, titulo, autor, extra_data): # Aquí, extra_data es un diccionario (o mejor aún, un objeto Pydantic) que contiene los datos adicionales según el tipo.
         if tipo == "libro":
             paginas = int(input("Número de páginas: "))
             nuevo = Libro(titulo, autor, codigo, paginas)
