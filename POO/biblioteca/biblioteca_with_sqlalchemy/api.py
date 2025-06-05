@@ -5,6 +5,7 @@ from modelos_pydantic import *
 from typing import Union
 from sqlalchemy.exc import IntegrityError
 from classes.modelos_alchemy import Usuarios_Alchemy
+from fastapi.middleware.cors import CORSMiddleware
 
 
 #IntegrityError es una excepción específica que lanza SQLAlchemy 
@@ -15,10 +16,17 @@ from classes.modelos_alchemy import Usuarios_Alchemy
 # Violaciones de FOREIGN KEY (insertar algo que referencia una clave que no existe).
 
 
-
 app = FastAPI()
 gestor = Gestor_BBDD()
 SessionLocal = sessionmaker(bind=gestor.engine)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # o ["http://127.0.0.1:5500"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_db():
@@ -80,24 +88,21 @@ async def get_material_unico(id_item: int,db_ses:Session = Depends(get_db)):
 async def post_material(material:Union[LibroCreate, RevistaCreate, DvdCreate], db_ses:Session = Depends(get_db)):
     try:
         if isinstance(material, LibroCreate):
-            nuevo = gestor.agregar_material_catalogo(
-                db_ses,
+            nuevo = gestor.crear_material_catalogo(
                 tipo = "libro",
                 titulo=material.titulo,
                 autor=material.autor,
                 extra_data={"paginas": material.paginas}
             )
         elif isinstance(material, RevistaCreate):
-            nuevo = gestor.agregar_material_catalogo(
-                db_ses,
+            nuevo = gestor.crear_material_catalogo(
                 tipo="revista",
                 titulo=material.titulo,
                 autor=material.autor,
                 extra_data={"edicion": material.edicion, "fecha publicacion": material.fecha}
             )
         elif isinstance(material, DvdCreate):
-            nuevo = gestor.agregar_material_catalogo(
-                db_ses,
+            nuevo = gestor.crear_material_catalogo(
                 tipo="dvd",
                 titulo=material.titulo,
                 autor=material.autor,
@@ -111,6 +116,21 @@ async def post_material(material:Union[LibroCreate, RevistaCreate, DvdCreate], d
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.put("/material/{id_material}")
+async def put_material(id_material: int, 
+                       cambios: MaterialUpdate,
+                       db_ses:Session=Depends(get_db)):
+    try:
+        extra_data = cambios.model_dump(exclude_unset=True)
+        gestor.modificar_material(db_ses, id_material, extra_data)
+        return {"message": "✅ Material actualizado correctamente"}
+    except Exception as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))    
+
 
 
 # #### **Gestión de usuarios**
@@ -155,8 +175,52 @@ async def post_usuarios(user: UsuarioCreate, db_ses:Session = Depends(get_db)):
 # | PUT    | `/prestamos/{id}` | Actualizar estado (por ejemplo, devolver libro) |
 
 
-# ### **Esquema visual simple**
+@app.get("/prestamos")
+async def get_prestamos(db_ses:Session = Depends(get_db)):
+    try:
+        data = gestor.mostrar_prestamos(db_ses)
+        return {"prestamos": data}
+    except Exception as e:
+        print(f"Error al buscar préstamos {e}")
 
+@app.get("/prestamos/{id_prestamo}")
+async def get_prestamos(id_prestamo: int, db_ses:Session = Depends(get_db)):
+    try:
+        data = gestor.mostrar_unico_prestamo(db_ses, id_prestamo)
+        return data
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"❌ Error interno al buscar préstamo: {str(e)}")
+
+
+@app.post("/prestamos")
+async def post_prestamo(prestamo: PrestamosRequest, db_ses:Session = Depends(get_db)):
+    try:
+        gestor.prestar_elemento_bbdd(db_ses, prestamo.id_item, prestamo.id_usuario)
+        return {"message": "✅ Préstamo registrado correctamente"}
+    except HTTPException as e:
+        raise # Deja pasar excepciones personalizadas
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"❌ Error interno: {str(e)}")
+    
+@app.put("/prestamos")
+async def put_prestamo(update: PrestamoUpdate, db_ses:Session = Depends(get_db)):
+    try:
+        gestor.actualizar_prestamo(
+            session=db_ses,
+            id_prestamo=update.id_prestamo,
+            fecha_limite=update.fecha_limite,
+            devolver=update.devuelto
+            )
+        return{"message": "✅ Préstamo actualizado correctamente"}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"❌ Error interno: {str(e)}")
+    
+
+# ### **Esquema visual simple**
 
 # /material       --> [GET, POST]
 # /material/{id}  --> [GET, PUT, DELETE]

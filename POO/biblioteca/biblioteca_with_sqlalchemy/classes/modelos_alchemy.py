@@ -11,7 +11,7 @@ class Usuarios_Alchemy(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(30), nullable=False)
 
-    prestamos = relationship("Prestamo", back_populates="usuario")
+    prestamos = relationship("Prestamo_Alchemy", back_populates="usuario")
 
 class CatalogoBiblioteca(Base):
     __tablename__ = 'catalogo_biblioteca'
@@ -23,7 +23,7 @@ class CatalogoBiblioteca(Base):
     codigo_inventario = Column(String(100), unique=True, nullable=False)
     prestado = Column(Boolean, default=False)
 
-    prestamo = relationship("Prestamo", back_populates="material", uselist=False)
+    prestamo = relationship("Prestamo_Alchemy", back_populates="material", uselist=False)
 
 
 
@@ -61,7 +61,7 @@ class DVD(Base):
     catalogo = relationship("CatalogoBiblioteca", backref="dvd")
 
 
-class Prestamo(Base):
+class Prestamo_Alchemy(Base):
     __tablename__ = 'prestamos_alchemy'
 
     id_prestamo = Column(Integer, primary_key=True, autoincrement=True)
