@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from classes.modelos_alchemy import *
 import uuid
 from fastapi import HTTPException
+from pymongo import MongoClient
 
 #mysql://root:IupkeoIwuJVczCxRpsSxBIPgaGqnLpES@nozomi.proxy.rlwy.net:50794/railway
 
@@ -22,9 +23,49 @@ class Gestor_BBDD:
         self.URL = "mysql+pymysql://root:IupkeoIwuJVczCxRpsSxBIPgaGqnLpES@nozomi.proxy.rlwy.net:50794/railway"
         self.engine = create_engine(self.URL) # ALCHEMY
         
-        #esto es necesario para frontend de terminal:
-        # self.Session = sessionmaker(bind=self.engine)
 
+        self.mongo_string = "mongodb://mongo:NbMhazHHMzNqZZvJnKfAgapiJpAqKFsJ@crossover.proxy.rlwy.net:51738"
+        
+        self.cliente_mongo = MongoClient(self.mongo_string,  serverSelectionTimeoutMS=5000)
+
+
+    # MONGO
+    def conectar_mongo(self):
+        try:
+            self.cliente_mongo.admin.command("ping")
+            print("✅ Conexión exitosa a MongoDB")
+        except Exception as e:
+            print("Error al conectar a MongoDB:", e)
+
+    # crear tabla en mongo
+    def crear_tabla_mongo(self):
+        self.mongodb = self.cliente_mongo["reseñas_mongo"]
+
+    def insertar_reseñas_mongo(self, id_item, review, autor):
+        try:
+            reseña = {
+                "id_item": id_item,
+                "opinion": review,
+                "autor": autor,
+                "fecha": datetime.now()
+            }
+            result = self.mongodb["reseñas"].insert_one(reseña)
+            print(f"🟢 Reseña insertada con ID: {result.inserted_id}")
+            return str(result.inserted_id)  
+        except Exception as e:
+            print("❌ Error al insertar la reseña:", e)
+            raise e
+
+
+    def buscar_reseñas_mongo(self, id_material):
+        try:
+            cursor = self.mongodb["reseñas"].find({"id_item": id_material},
+                                {"autor": 1, "opinion": 1, "fecha": 1, "_id": 0} )
+            reseñas = list(cursor)
+            return reseñas                
+        except Exception as e:
+            print("❌ Error al recuperar reseñas:", e)
+            raise e
 
     # ALCHEMY
     def conectar_db(self):

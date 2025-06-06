@@ -19,6 +19,8 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 gestor = Gestor_BBDD()
 SessionLocal = sessionmaker(bind=gestor.engine)
+gestor.conectar_mongo()
+gestor.crear_tabla_mongo()
 
 app.add_middleware(
     CORSMiddleware,
@@ -99,7 +101,7 @@ async def post_material(material:Union[LibroCreate, RevistaCreate, DvdCreate], d
                 tipo="revista",
                 titulo=material.titulo,
                 autor=material.autor,
-                extra_data={"edicion": material.edicion, "fecha publicacion": material.fecha}
+                extra_data={"edicion": material.edicion, "fecha": material.fecha}
             )
         elif isinstance(material, DvdCreate):
             nuevo = gestor.crear_material_catalogo(
@@ -220,14 +222,45 @@ async def put_prestamo(update: PrestamoUpdate, db_ses:Session = Depends(get_db))
         raise HTTPException(status_code=500, detail=f"❌ Error interno: {str(e)}")
     
 
-# ### **Esquema visual simple**
 
-# /material       --> [GET, POST]
-# /material/{id}  --> [GET, PUT, DELETE]
+# #### **Gestión de reseñas**
 
-# /usuarios       --> [GET, POST]
-# /usuarios/{id} --> [GET, DELETE]
+# | Método | Ruta              | Descripción                                     |
+# | ------ | ----------------- | ----------------------------------------------- |
+# | GET    | `/review`      | Listar todos los préstamos                      |
+# | GET    | `/review/{id}` | Ver detalles de una reseña                     |
+# | POST   | `/review`      | Registrar una nueva reseña                     |
+# | PUT    | `/review/{id}` | Actualizar estado (por ejemplo, devolver libro) |
 
-# /prestamos       --> [GET, POST]
-# /prestamos/{id} --> [GET, PUT]
-# 
+
+
+@app.get("/review/{id_item}")
+async def get_review(id_item: int):
+    try:
+        reviews = gestor.buscar_reseñas_mongo(id_item)
+        if not reviews: 
+            return {"message": f"No hay reviews para el item {id_item}"}
+        return {"reviews": reviews}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al insertar la review: {str(e)}")
+    
+    
+
+
+
+@app.post("/review")
+async def put_review(data: ReviewCreate):
+    try:
+        inserted_id = gestor.insertar_reseñas_mongo(data.id_item, data.review, data.autor)
+        return {"message": "Review insertada correctamente", "id": inserted_id}
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al insertar la review: {str(e)}")
+    
+
+
+    

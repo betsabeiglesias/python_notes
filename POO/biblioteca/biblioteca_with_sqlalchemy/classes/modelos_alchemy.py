@@ -11,6 +11,9 @@ class Usuarios_Alchemy(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(30), nullable=False)
 
+    edad = Column(Integer)
+    email = Column(String(120), unique=True)
+
     prestamos = relationship("Prestamo_Alchemy", back_populates="usuario")
 
 class CatalogoBiblioteca(Base):

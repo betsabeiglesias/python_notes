@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Biblioteca API Frontend</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    section { margin-bottom: 2rem; }
+    label, input, select, textarea, button { display: block; margin: 0.5rem 0; }
+    input, select, textarea { width: 300px; }
+  </style>
+</head>
+<body>
+  <h1>Frontend Biblioteca</h1>
+
+  <section>
+    <h2>Registrar nuevo usuario</h2>
+    <input id="nombre_usuario" placeholder="Nombre del usuario">
+    <button onclick="crearUsuario()">Crear Usuario</button>
+    <pre id="respuesta_usuario"></pre>
+  </section>
+
+<section>
+    <h2>Registrar nuevo material</h2>
+    <select name="tipo" id="tipo_material">
+      <option value="" disabled selected>Elige tipo</option>
+      <option value="libro">Libro</option>
+      <option value="revista">Revista</option>
+      <option value="dvd">DVD</option>
+    </select>
+    <div id="form_libro" style="display: none">
+      <input type="text" id="titulo_libro" placeholder="Titulo del libro">
+      <input type="text" id="autor_libro" placeholder="Autor del libro">
+      <input type="number" id="paginas" placeholder="Páginas del libro">
+    </div>
+     <div id="form_revista" style="display: none">
+      <input type="text" id="titulo_revista" placeholder="Titulo de la Revista">
+      <input type="text" id="autor_revista" placeholder="Autor de la Revista">
+      <input type="number" id="edicion" placeholder="Número de revista">
+      <input type="date" id="fecha" placeholder="Fecha de publicación">
+    
+    </div>
+     <div id="form_dvd" style="display: none">
+      <input type="text" id="titulo_dvd" placeholder="Titulo del DVD">
+      <input type="text" id="autor_dvd" placeholder="Director">
+      <input type="number" id="duracion" placeholder="Duración">
+       <input type="text" id="formato" placeholder="Formato">
+    </div>
+
+
+   
+    <button onclick="registrar_material()">Registrar material</button>
+    <!-- <pre id="respuesta_usuario"></pre> -->
+  </section>
+
+
+  <section>
+    <h2>Ver info por ID de material</h2>
+    <input id="id_consultar" placeholder="ID del material">
+    <button onclick="consultar_elemento_catalogo()">Buscar Elemento</button>
+    <pre id="info_item"></pre>
+  </section>
+
+  <section>
+    <h2>Registrar Préstamo</h2>
+    <input id="id_a_prestar" placeholder="ID del material">
+    <input id="id_usuario" placeholder="Nº de socio">
+    <button onclick="regsitrar_prestamo()">Registrar Préstamo</button>
+  </section>
+
+
+
+
+
+
+
+  <section>
+    <h2>Agregar Review</h2>
+    <input id="id_item_review" placeholder="ID del ítem">
+    <input id="autor_review" placeholder="Autor">
+    <textarea id="texto_review" placeholder="Tu review"></textarea>
+    <button onclick="crearReview()">Enviar Review</button>
+    <pre id="respuesta_review"></pre>
+  </section>
+
+  <section>
+    <h2>Ver Reviews por ID de material</h2>
+    <input id="buscar_id_review" placeholder="ID del material">
+    <button onclick="buscarReviews()">Buscar Reviews</button>
+    <pre id="resultado_reviews"></pre>
+  </section>
+  <script src="fronted_js.js"></script>
+  <script>
+    // const API_URL = 'http://127.0.0.1:8000';
+
+    async function crearUsuario() {
+      const nombre = document.getElementById('nombre_usuario').value;
+      const res = await fetch(`${API_URL}/usuarios`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre })
+      });
+      const data = await res.json();
+      document.getElementById('respuesta_usuario').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function crearReview() {
+      const id_item = parseInt(document.getElementById('id_item_review').value);
+      const autor = document.getElementById('autor_review').value;
+      const review = document.getElementById('texto_review').value;
+
+      const res = await fetch(`${API_URL}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_item, autor, review })
+      });
+      const data = await res.json();
+      document.getElementById('respuesta_review').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function buscarReviews() {
+      const id = document.getElementById('buscar_id_review').value;
+      const res = await fetch(`${API_URL}/review/${id}`);
+      const data = await res.json();
+      document.getElementById('resultado_reviews').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+
+</body>
+</html>

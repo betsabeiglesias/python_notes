@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, date
 from enum import Enum
 
 class TipoMaterialEnum(str, Enum):
-    libro = "Libro"
-    revista = "Revista"
-    dvd = "DVD"
+    libro = "libro"
+    revista = "revista"
+    dvd = "dvd"
 
 class BaseMaterial(BaseModel):
     tipo: TipoMaterialEnum
@@ -19,7 +19,7 @@ class LibroCreate(BaseMaterial):
 
 class RevistaCreate(BaseMaterial):
     edicion: int
-    fecha: str
+    fecha: date
 
 class DvdCreate(BaseMaterial):
     duracion: int
@@ -53,3 +53,9 @@ class MaterialUpdate(BaseModel):
     fecha_publicacion: Optional[str] = None 
     duracion: Optional[int] = None
     formato: Optional[str] = None
+
+
+class ReviewCreate(BaseModel):
+    id_item: int
+    review: str
+    autor: str

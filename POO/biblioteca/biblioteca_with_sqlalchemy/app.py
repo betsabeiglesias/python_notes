@@ -2,16 +2,22 @@ from classes.gestor_biblioteca import Gestor #,biblioteca_de_ejemplo
 from classes.db import Gestor_BBDD
 
 
-if __name__ == "__main__":
 
- 
+
+def main(): 
     biblio = Gestor("Central")
     
     db = Gestor_BBDD()
   
+    # MySQL
     db.conectar_db()
-   
     db.crear_tablas()
+
+    # MongoDB
+    db.conectar_mongo()
+    db.crear_tabla_mongo()
+
+
     
     while True:
         opt = int(input("--- BIENVENIDO A LA BIBLIOTECA ---\n"
@@ -85,3 +91,7 @@ if __name__ == "__main__":
                 break
             case _:
                 print ("Opción no válida")
+
+
+if __name__ == "__main__":
+    main()
