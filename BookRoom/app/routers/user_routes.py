@@ -52,3 +52,16 @@ def get_all_users(db:Session=Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+
+@router.get("/{id_user}", response_model=UserOut)
+def get_user(id_user: int, db:Session=Depends(get_db)):
+    try:
+        user = db.query(User).filter(User.id == id_user).first()
+        if not user:
+            return {"message": f"User with {id_user} doesn't exist"}
+        return user
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
