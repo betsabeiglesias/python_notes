@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.schemas.user_schema import UserCreate, UserOut
 from app.models.user import User
 from app.dependencies import get_db
+from typing import List
 
 
 # APIRouter: para definir rutas agrupadas.
@@ -42,3 +43,12 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)   # Actualiza el objeto con el ID generado por la base de datos
 
     return new_user  # FastAPI lo convierte a UserOut automáticamente
+
+@router.get("/", response_model=List[UserOut])
+def get_all_users(db:Session=Depends(get_db)):
+    try:
+        users = db.query(User).all()
+        return users
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
