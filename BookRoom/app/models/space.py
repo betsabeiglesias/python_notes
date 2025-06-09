@@ -1,6 +1,7 @@
 from app.database import Base
-from sqlalchemy import Column, Integer,  String, Date, Boolean, Enum, ForeignKey, DateTime, Float
+from sqlalchemy import Column, Integer,  String, Enum as SQLAEnum
 from sqlalchemy.orm import relationship
+from models.enums import SpaceType
 
 class Space(Base):
     __tablename__ = 'spaces'
@@ -9,8 +10,6 @@ class Space(Base):
     name = Column(String(30), nullable=False)
     location = Column(String(30), nullable=False)
     capacity = Column(Integer, nullable=False)
-    type = Column(String(30))
+    type = Column(SQLAEnum(SpaceType), nullable=False)
     seat = relationship("Seat", back_populates="space")
-
-    # type habrá que cambiarlo a enum
 
