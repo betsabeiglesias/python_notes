@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer,  String, Enum as SQLAEnum
 from sqlalchemy.orm import relationship
 from app.database import Base
-from app.models.enum import RoleEnum
+from app.models.enums import RoleEnum
 
 
 # Base => “Todos mis modelos van a heredar de mí, así sabrás que forman parte del mismo sistema de tablas.”

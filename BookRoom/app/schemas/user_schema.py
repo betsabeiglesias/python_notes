@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from app.models.enum import RoleEnum
+from app.models.enums import RoleEnum
+from typing import Optional
 
 class UserCreate(BaseModel):
     name:str
@@ -16,3 +17,7 @@ class UserOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserUpdate(BaseModel):
+    nickname: Optional[str]
+    credit: Optional[int]

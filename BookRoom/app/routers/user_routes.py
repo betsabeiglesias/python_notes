@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.schemas.user_schema import UserCreate, UserOut
+from app.schemas.user_schema import UserCreate, UserOut, UserUpdate
 from app.models.user import User
 from app.dependencies import get_db
 from typing import List
@@ -58,10 +58,26 @@ def get_user(id_user: int, db:Session=Depends(get_db)):
     try:
         user = db.query(User).filter(User.id == id_user).first()
         if not user:
-            return {"message": f"User with {id_user} doesn't exist"}
+            raise HTTPException(status_code=404, detail= f"User with id: {id_user} does not exist")
         return user
     except HTTPException as e:
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@router.put("/{id_user}", response_model=UserOut)
+def update_user(id_user: int, user_update: UserUpdate, db: Session=Depends(get_db)):
+    try:
+        user = db.query(User).filter(User.id == id_user).first()
+        if not user:
+            raise HTTPException(status_code=404, detail= f"User with id: {id_user} does not exist")
+        update_data = user_update.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(user, key, value)
+        db.commit()
+        db.refresh(user)
+        return user
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

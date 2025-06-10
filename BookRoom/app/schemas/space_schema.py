@@ -1,11 +1,11 @@
 from pydantic import BaseModel, Field
-
+from app.models.enums import SpaceType
 
 class SpaceCreate(BaseModel):
     name: str = Field(..., example="North Wing")
     location: str = Field(..., example="First Floor")
     capacity: int = Field(..., example=20, ge=1)
-    type: str = Field(..., example="study")
+    type: SpaceType= Field(...,example=SpaceType.study)
 
 
 class SpaceOut(BaseModel):

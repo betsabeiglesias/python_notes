@@ -1,7 +1,7 @@
 from app.database import Base
-from sqlalchemy import Column, Integer,  String, Enum as SQLAEnum
+from sqlalchemy import Column, Integer,  String, UniqueConstraint, Enum as SQLAEnum
 from sqlalchemy.orm import relationship
-from models.enums import SpaceType
+from app.models.enums import SpaceType
 
 class Space(Base):
     __tablename__ = 'spaces'
@@ -13,3 +13,7 @@ class Space(Base):
     type = Column(SQLAEnum(SpaceType), nullable=False)
     seat = relationship("Seat", back_populates="space")
 
+
+    __table_args__ = (
+        UniqueConstraint('name', 'location', name='uq_name_location'),
+    )

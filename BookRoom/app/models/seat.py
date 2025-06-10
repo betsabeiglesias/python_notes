@@ -7,8 +7,8 @@ class Seat(Base):
 
     id = Column(Integer, primary_key=True, nullable=False)
     number = Column(Integer)
-    avaliable = Column(Boolean, default=True)
-    space_id = Column(Integer, ForeignKey("spaces.id"))
+    available = Column(Boolean, default=True)
+    space_id = Column(Integer, ForeignKey("spaces.id"), nullable=False)
     space = relationship("Space", back_populates="seat")
     reservation = relationship("Reservation", back_populates="seat")
 
