@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+    {% block title %}
+   
+    Creación Usuario
+
+    {% endblock %}
+
+    {% block content %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+
+    <h2>Crear un nuevo usuario</h2>
+    <form method="POST">
+    <label for="name">Nombre:</label>
+    <input type="text" name="name" required><br><br>
+
+    <label for="nickname">Nickname:</label>
+    <input type="text" name="nickname" required><br><br>
+
+    <label for="credit">Crédito:</label>
+    <input type="number" name="credit" required><br><br>
+
+    <label for="rol">Rol:</label>
+    <select name="rol" required>
+        <option value="user">Usuario</option>
+        <option value="admin">Admin</option>
+    </select><br><br>
+
+    <button type="submit">Crear usuario</button>
+    </form>
+
+
+    {% endblock %}

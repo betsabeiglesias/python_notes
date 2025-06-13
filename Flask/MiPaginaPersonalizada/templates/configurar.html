@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Esta es la página para configurar {% endblock %}
+
+{% block content %}
+<h2>
+    Configura tu nombre y tu color de fondo
+</h2>
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="nombre">Tu nombre:</label>
+    <input type="text" name="nombre" id="nombre" required>
+    <br><br>
+    <label for="color">El color de fondo:</label>
+     <select name="color" id="color" required>
+        <option value="#000000">Negro</option>
+        <option value="#1a1a1a">Gris oscuro</option>
+        <option value="#2c3e50">Azul petróleo</option>
+        <option value="#4b0082">Índigo</option>
+        <option value="#2f4f4f">Gris pizarra</option>
+        <option value="#3b3b3b">Gris carbón</option>
+        <option value="#5a189a">Morado profundo</option>
+        <option value="#003366">Azul oscuro</option>
+    </select><br><br>
+    <button type="submit">Guardar</button>
+
+</form>
+
+{% endblock %}

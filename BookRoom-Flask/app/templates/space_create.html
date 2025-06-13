@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+
+    {% block title %}
+   
+    Creación Espacio
+
+    {% endblock %}
+
+    {% block content %}
+
+    <h2>Crear un nuevo usuario</h2>
+    <form method="POST" action="{{ url_for('space_routes.create_space') }}">
+    <label for="name_space">Nombre:</label>
+    <input type="text" name="name_space" required><br><br>
+
+    <label for="location">Location:</label>
+    <input type="text" name="location" required><br><br>
+
+    <label for="capacity">Capacidad:</label>
+    <input type="number" name="capacity" required><br><br>
+
+    <label for="type">Tipo:</label>
+    <select name="type" required>
+        <option value="study">Estudio</option>
+        <option value="lecture">Lectura</option>
+        <option value="meeting">Reunión</option>
+    </select><br><br>
+
+    <button type="submit">Crear Espacio</button>
+    </form>
+
+
+    {% endblock %}

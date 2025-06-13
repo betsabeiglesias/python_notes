@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/library_theme.css') }}">
+
+    {% block title %}
+    <title>Document</title>
+    {% endblock %}
+     <!-- <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            margin-right: 20px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 20px;
+        }
+    </style> -->
+</head>
+<body>
+ <nav>
+  <div class="dropdown">
+    <a>Usuarios</a>
+    <div class="dropdown-content">
+      <a href="{{ url_for('user_routes.get_all_users') }}">Ver usuarios</a>
+      <a href="{{ url_for('user_routes.create_user') }}">+ Crear usuario</a>
+      <a href="{{ url_for('user_routes.search_user_form') }}">Buscar usuario</a>
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <a>Espacios</a>
+    <div class="dropdown-content">
+      <a href="{{ url_for('space_routes.get_all_spaces') }}">Ver espacios</a>
+      <a href="{{ url_for('space_routes.create_space') }}">+ Crear espacio</a>
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <a>Reservas</a>
+    <div class="dropdown-content">
+      <a href="{{ url_for('reservation_routes.reservation_list') }}">Ver reservas</a>
+      <a href="{{ url_for('reservation_routes.reservation_create') }}">+ Crear reserva</a>
+    </div>
+  </div>
+</nav>
+ <div class="container">
+    {% block content %}
+    {% endblock %}
+    </div>
+</body>
+</html>

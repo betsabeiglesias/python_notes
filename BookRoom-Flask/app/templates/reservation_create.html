@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Reserva{% endblock %}
+
+{% block content %}
+<h2>Crear una nueva reserva</h2>
+
+<form method="GET" action="{{ url_for('reservation_routes.reservation_create') }}">
+    <label for="user_id">Usuario:</label>
+    <select name="user_id" required>
+        {% for user in users %}
+        <option value="{{ user.id }}" {% if selected_user_id == user.id %}selected{% endif %}>
+            {{ user.name }}
+        </option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="start_time">Inicio:</label>
+    <input type="datetime-local" name="start_time" value="{{ request.args.get('start_time') }}" required><br><br>
+
+    <label for="end_time">Fin:</label>
+    <input type="datetime-local" name="end_time" value="{{ request.args.get('end_time') }}" required><br><br>
+
+    <button type="submit">Ver Asientos Disponibles</button>
+</form>
+
+{% if seats %}
+<form method="POST">
+    <input type="hidden" name="user_id" value="{{ request.args.get('user_id') }}">
+    <input type="hidden" name="start_time" value="{{ request.args.get('start_time') }}">
+    <input type="hidden" name="end_time" value="{{ request.args.get('end_time') }}">
+
+    <label for="seat_id">Asiento disponible:</label>
+    <select name="seat_id" required>
+        {% for seat in seats %}
+        <option value="{{ seat.id }}">#{{ seat.number }} (Espacio {{ seat.space.name }})</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Confirmar Reserva</button>
+</form>
+{% endif %}
+{% endblock %}

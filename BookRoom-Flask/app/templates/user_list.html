@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>🧑 Lista de Usuarios</h2>
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Nickname</th>
+        <th>Crédito</th>
+        <th>Rol</th>
+        <th>Consulta</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.name }}</td>
+        <td>{{ u.nickname }}</td>
+        <td>{{ u.credit }}</td>
+        <td>{{ u.rol.value }}</td>
+        <td>
+      <a href="{{ url_for('user_routes.get_only_user', id_user=u.id) }}" class="btn btn-outline">👁️ Ver detalles</a>
+    </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

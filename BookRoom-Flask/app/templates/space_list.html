@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %} Lista de Espacios {% endblock %}
+
+{% block content %}
+<h1>Lista de Espacios</h1>
+
+<a href="{{ url_for('space_routes.create_space') }}">➕ Crear nuevo espacio</a>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Capacidad</th>
+            <th>Tipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for space in spaces %}
+        <tr>
+            <td>{{ space.id }}</td>
+            <td>{{ space.name }}</td>
+            <td>{{ space.location }}</td>
+            <td>{{ space.capacity }}</td>
+            <td>{{ space.type.value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

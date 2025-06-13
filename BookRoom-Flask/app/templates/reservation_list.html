@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Reservas{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>📖 Lista de Reservas</h2>
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>👤 Usuario</th>
+        <th>💺 Asiento</th>
+        <th>🏛️ Espacio</th>
+        <th>🕒 Inicio</th>
+        <th>🕓 Fin</th>
+        <th>⏱️ Duración</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in reservations %}
+      <tr>
+        <td>{{ r.user.name }}</td>
+        <td>#{{ r.seat.number }}</td>
+        <td>{{ r.seat.space.name }}</td>
+        <td>{{ r.start_time.strftime("%d/%m/%Y %H:%M") }}</td>
+        <td>{{ r.end_time.strftime("%d/%m/%Y %H:%M") }}</td>
+        <td>{{ r.calculated_duration }} min</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

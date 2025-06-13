@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{%block title %}  EL TÍTULO DE INICIO que cambia si vas a configuración {% endblock %}
+
+
+{% block content %} 
+<div style="background-color: {{ color }}; padding: 30px;">
+    {% if nombre %}
+    <h2>¡Hola, {{nombre}}!</h2>
+    <p>Tu color elegido es {{color}}</p>
+    {% else %}
+    <p>Esta es la página de inicio.
+    Aún no has configurado tus preferencias
+     <a href="/configurar">configurar ahora</a> </p> 
+    {% endif %}
+</div>
+{% endblock %}

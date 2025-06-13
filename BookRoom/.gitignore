@@ -1,0 +1,30 @@
+# 🐍 Entorno virtual
+venv/
+ENV/
+env/
+.venv/
+
+# 🗂 Archivos de configuración locales
+# *.env
+# .env.*
+
+# 🧪 Archivos de pruebas o caché
+__pycache__/
+*.py[cod]
+*.log
+
+# 📦 Dependencias específicas
+*.egg-info/
+dist/
+build/
+
+# 💻 Configuración de editor
+.vscode/
+.idea/
+
+# 🗃 Base de datos local (si usas SQLite temporalmente)
+*.sqlite3C
+*.db
+
+# 🚫 Otros
+.DS_Store

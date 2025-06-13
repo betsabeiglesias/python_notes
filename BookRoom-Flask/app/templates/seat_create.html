@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} Crear Asiento {% endblock %}
+
+{% block content %}
+<h2>Crear nuevo asiento</h2>
+
+<form method="POST" action="{{ url_for('seat_routes.create_seat') }}">
+    <label for="number">Número de asiento:</label>
+    <input type="number" name="number" required><br><br>
+
+    <label for="space_id">Espacio al que pertenece:</label>
+    <select name="space_id" required>
+        {% for space in spaces %}
+        <option value="{{ space.id }}">{{ space.name }} </option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Crear asiento</button>
+</form>
+{% endblock %}

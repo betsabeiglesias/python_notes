@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %} Lista de Asientos {% endblock %}
+
+{% block content %}
+<h2>Lista de Asientos</h2>
+
+<a href="{{ url_for('seat_routes.create_seat') }}">➕ Crear nuevo asiento</a>
+
+<table border="1" cellpadding="8">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Número</th>
+            <th>Disponible</th>
+            <th>Espacio</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for seat in seats %}
+        <tr>
+            <td>{{ seat.id }}</td>
+            <td>{{ seat.number }}</td>
+            <td>{{ "Sí" if seat.available else "No" }}</td>
+            <td>{{ seat.space.name }} ({{ seat.space.location }})</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

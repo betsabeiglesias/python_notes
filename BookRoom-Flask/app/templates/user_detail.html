@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %} Detalles del Usuario {{ user.id }} {% endblock %}
+
+{% block content %}
+<h1>Detalles del Usuario</h1>
+
+<table>
+    <tr>
+        <th>ID:</th>
+        <td>{{ user.id }}</td>
+    </tr>
+    <tr>
+        <th>Nombre:</th>
+        <td>{{ user.name }}</td>
+    </tr>
+    <tr>
+        <th>Nickname:</th>
+        <td>{{ user.nickname }}</td>
+    </tr>
+    <tr>
+        <th>Crédito:</th>
+        <td>{{ user.credit }}</td>
+    </tr>
+    <tr>
+        <th>Rol:</th>
+        <td>{{ user.rol }}</td>
+    </tr>
+</table>
+
+<a href="{{ url_for('user_routes.get_all_users')}}">← Volver a la lista de usuarios</a>
+{% endblock %}
